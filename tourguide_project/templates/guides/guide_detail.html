@@ -1,0 +1,129 @@
+{% extends 'base.html' %}
+{% block title %}{{ profile.user.get_full_name }} — TourGuide Nigeria{% endblock %}
+{% block content %}
+<div class="container py-5">
+
+  <!-- Profile Header -->
+  <div class="card border-0 shadow-sm mb-4">
+    <div class="card-body p-4">
+      <div class="row align-items-center">
+        <div class="col-md-2 text-center mb-3 mb-md-0">
+          {% if profile.profile_photo %}
+          <img src="{{ profile.profile_photo.url }}" alt="{{ profile.user.get_full_name }}" class="rounded-circle" width="110" height="110" style="object-fit:cover">
+          {% else %}
+          <div class="rounded-circle bg-primary text-white d-flex align-items-center justify-content-center mx-auto fw-bold" style="width:110px;height:110px;font-size:2.5rem">
+            {{ profile.user.first_name|first }}{{ profile.user.last_name|first }}
+          </div>
+          {% endif %}
+        </div>
+        <div class="col-md-7">
+          <h2 class="fw-bold mb-1">
+            {{ profile.user.get_full_name }}
+            {% if profile.is_verified %}
+            <span class="badge bg-primary ms-1 fs-6"><i class="bi bi-patch-check-fill me-1"></i>Verified</span>
+            {% endif %}
+          </h2>
+          <p class="text-muted mb-2"><i class="bi bi-geo-alt me-1"></i>{{ profile.location|default:"Location not specified" }}</p>
+          <p class="mb-2">
+            <span class="badge bg-light text-dark border me-2">{{ profile.get_specialization_display }}</span>
+            <span class="text-muted small"><i class="bi bi-clock me-1"></i>{{ profile.years_of_experience }} yr{{ profile.years_of_experience|pluralize }} experience</span>
+          </p>
+          {% if profile.languages %}
+          <p class="mb-0 text-muted small"><i class="bi bi-translate me-1"></i>{{ profile.languages }}</p>
+          {% endif %}
+        </div>
+        <div class="col-md-3 text-md-end text-center mt-3 mt-md-0">
+          <div class="fs-2 fw-bold text-warning"><i class="bi bi-star-fill"></i> {{ profile.average_rating }}</div>
+          <p class="text-muted small mb-2">{{ reviews|length }} review{{ reviews|length|pluralize }}</p>
+          {% if user.is_authenticated and user == profile.user %}
+          <a href="{% url 'guides:profile_edit' %}" class="btn btn-outline-primary btn-sm"><i class="bi bi-pencil me-1"></i>Edit Profile</a>
+          {% endif %}
+        </div>
+      </div>
+      {% if profile.bio %}
+      <hr>
+      <p class="mb-0">{{ profile.bio }}</p>
+      {% endif %}
+    </div>
+  </div>
+
+  <div class="row g-4">
+    <!-- Experiences -->
+    <div class="col-lg-8">
+      <div class="d-flex justify-content-between align-items-center mb-3">
+        <h4 class="fw-bold mb-0"><i class="bi bi-compass me-2 text-primary"></i>Experiences</h4>
+        {% if user.is_authenticated and user == profile.user %}
+        <a href="{% url 'guides:experience_create' %}" class="btn btn-success btn-sm"><i class="bi bi-plus me-1"></i>Add Experience</a>
+        {% endif %}
+      </div>
+      {% if experiences %}
+        {% for exp in experiences %}
+        <div class="card border-0 shadow-sm mb-3">
+          <div class="card-body p-4">
+            <div class="d-flex justify-content-between align-items-start">
+              <div class="flex-grow-1">
+                <h5 class="fw-bold mb-1">{{ exp.title }}</h5>
+                <p class="text-muted small mb-2">
+                  <span class="badge bg-light text-dark border me-2">{{ exp.get_category_display }}</span>
+                  <i class="bi bi-clock me-1"></i>{{ exp.duration_hours }} hrs
+                  <i class="bi bi-geo-alt ms-2 me-1"></i>{{ exp.location }}
+                </p>
+                <p class="mb-2">{{ exp.description|truncatechars:200 }}</p>
+                <p class="fw-bold text-success mb-0">₦{{ exp.price|floatformat:2 }} <span class="text-muted fw-normal small">per person</span></p>
+              </div>
+              <div class="ms-3 text-end">
+                {% if user.is_authenticated and user.is_tourist %}
+                <a href="{% url 'bookings:booking_create' exp.pk %}" class="btn btn-primary btn-sm">
+                  <i class="bi bi-calendar-plus me-1"></i>Book
+                </a>
+                {% elif user.is_authenticated and user == profile.user %}
+                <a href="{% url 'guides:experience_edit' exp.pk %}" class="btn btn-outline-secondary btn-sm me-1"><i class="bi bi-pencil"></i></a>
+                <a href="{% url 'guides:experience_delete' exp.pk %}" class="btn btn-outline-danger btn-sm"><i class="bi bi-trash"></i></a>
+                {% endif %}
+              </div>
+            </div>
+          </div>
+        </div>
+        {% endfor %}
+      {% else %}
+        <div class="text-center text-muted py-4">
+          <i class="bi bi-compass fs-1"></i>
+          <p class="mt-2">No experiences listed yet.</p>
+        </div>
+      {% endif %}
+    </div>
+
+    <!-- Reviews -->
+    <div class="col-lg-4">
+      <h4 class="fw-bold mb-3"><i class="bi bi-chat-left-quote me-2 text-warning"></i>Reviews</h4>
+      {% if reviews %}
+        {% for review in reviews %}
+        <div class="card border-0 shadow-sm mb-3">
+          <div class="card-body p-3">
+            <div class="d-flex justify-content-between align-items-start mb-1">
+              <strong class="small">{{ review.tourist.get_full_name }}</strong>
+              <span class="text-warning small">
+                {% for i in "12345" %}
+                  {% if forloop.counter <= review.rating %}
+                  <i class="bi bi-star-fill"></i>
+                  {% else %}
+                  <i class="bi bi-star"></i>
+                  {% endif %}
+                {% endfor %}
+              </span>
+            </div>
+            <p class="text-muted small mb-1">{{ review.created_at|date:"M d, Y" }}</p>
+            <p class="mb-0 small">{{ review.comment }}</p>
+          </div>
+        </div>
+        {% endfor %}
+      {% else %}
+        <div class="text-center text-muted py-4">
+          <i class="bi bi-star fs-1"></i>
+          <p class="mt-2">No reviews yet. Be the first!</p>
+        </div>
+      {% endif %}
+    </div>
+  </div>
+</div>
+{% endblock %}

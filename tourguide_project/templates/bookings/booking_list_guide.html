@@ -1,0 +1,133 @@
+{% extends 'base.html' %}
+{% block title %}Manage Bookings — TourGuide Nigeria{% endblock %}
+{% block content %}
+<div class="container py-5">
+  <h2 class="fw-bold mb-4"><i class="bi bi-calendar-check text-primary me-2"></i>Manage Bookings</h2>
+
+  <!-- Tabs -->
+  <ul class="nav nav-tabs mb-4" id="bookingTabs">
+    <li class="nav-item">
+      <a class="nav-link active" data-bs-toggle="tab" href="#pending">
+        Pending <span class="badge bg-warning text-dark ms-1">{{ pending|length }}</span>
+      </a>
+    </li>
+    <li class="nav-item">
+      <a class="nav-link" data-bs-toggle="tab" href="#confirmed">
+        Confirmed <span class="badge bg-primary ms-1">{{ confirmed|length }}</span>
+      </a>
+    </li>
+    <li class="nav-item">
+      <a class="nav-link" data-bs-toggle="tab" href="#completed">
+        Completed <span class="badge bg-success ms-1">{{ completed|length }}</span>
+      </a>
+    </li>
+    <li class="nav-item">
+      <a class="nav-link" data-bs-toggle="tab" href="#cancelled">
+        Cancelled <span class="badge bg-secondary ms-1">{{ cancelled|length }}</span>
+      </a>
+    </li>
+  </ul>
+
+  <div class="tab-content">
+    <!-- PENDING -->
+    <div class="tab-pane fade show active" id="pending">
+      {% if pending %}
+        {% for b in pending %}
+        <div class="card border-0 shadow-sm mb-3">
+          <div class="card-body p-4">
+            <div class="row align-items-center">
+              <div class="col-md-7">
+                <h6 class="fw-bold mb-1">{{ b.experience.title }}</h6>
+                <p class="text-muted small mb-1"><i class="bi bi-person me-1"></i>{{ b.tourist.get_full_name }} &nbsp;|&nbsp; <i class="bi bi-calendar me-1"></i>{{ b.requested_date }}</p>
+                {% if b.notes %}<p class="text-muted small mb-0"><i class="bi bi-chat-left-text me-1"></i>{{ b.notes }}</p>{% endif %}
+              </div>
+              <div class="col-md-5 text-md-end mt-3 mt-md-0 d-flex gap-2 justify-content-md-end">
+                <form method="post" action="{% url 'bookings:booking_accept' b.pk %}">
+                  {% csrf_token %}
+                  <button type="submit" class="btn btn-success btn-sm px-3"><i class="bi bi-check-circle me-1"></i>Accept</button>
+                </form>
+                <form method="post" action="{% url 'bookings:booking_decline' b.pk %}">
+                  {% csrf_token %}
+                  <button type="submit" class="btn btn-outline-danger btn-sm px-3"><i class="bi bi-x-circle me-1"></i>Decline</button>
+                </form>
+              </div>
+            </div>
+          </div>
+        </div>
+        {% endfor %}
+      {% else %}
+        <p class="text-muted text-center py-4">No pending booking requests.</p>
+      {% endif %}
+    </div>
+
+    <!-- CONFIRMED -->
+    <div class="tab-pane fade" id="confirmed">
+      {% if confirmed %}
+        {% for b in confirmed %}
+        <div class="card border-0 shadow-sm mb-3">
+          <div class="card-body p-4">
+            <div class="row align-items-center">
+              <div class="col-md-8">
+                <h6 class="fw-bold mb-1">{{ b.experience.title }}</h6>
+                <p class="text-muted small mb-0"><i class="bi bi-person me-1"></i>{{ b.tourist.get_full_name }} &nbsp;|&nbsp; <i class="bi bi-calendar me-1"></i>{{ b.requested_date }}</p>
+              </div>
+              <div class="col-md-4 text-md-end mt-3 mt-md-0">
+                <form method="post" action="{% url 'bookings:booking_complete' b.pk %}">
+                  {% csrf_token %}
+                  <button type="submit" class="btn btn-primary btn-sm px-3"><i class="bi bi-check2-all me-1"></i>Mark Completed</button>
+                </form>
+              </div>
+            </div>
+          </div>
+        </div>
+        {% endfor %}
+      {% else %}
+        <p class="text-muted text-center py-4">No confirmed bookings.</p>
+      {% endif %}
+    </div>
+
+    <!-- COMPLETED -->
+    <div class="tab-pane fade" id="completed">
+      {% if completed %}
+        {% for b in completed %}
+        <div class="card border-0 shadow-sm mb-3">
+          <div class="card-body p-4">
+            <div class="row align-items-center">
+              <div class="col-md-9">
+                <h6 class="fw-bold mb-1">{{ b.experience.title }}</h6>
+                <p class="text-muted small mb-0"><i class="bi bi-person me-1"></i>{{ b.tourist.get_full_name }} &nbsp;|&nbsp; <i class="bi bi-calendar me-1"></i>{{ b.requested_date }}</p>
+              </div>
+              <div class="col-md-3 text-md-end mt-2 mt-md-0">
+                {% if b.has_review %}
+                <span class="badge bg-success"><i class="bi bi-star-fill me-1"></i>Reviewed</span>
+                {% else %}
+                <span class="badge bg-light text-muted border">Awaiting Review</span>
+                {% endif %}
+              </div>
+            </div>
+          </div>
+        </div>
+        {% endfor %}
+      {% else %}
+        <p class="text-muted text-center py-4">No completed tours yet.</p>
+      {% endif %}
+    </div>
+
+    <!-- CANCELLED -->
+    <div class="tab-pane fade" id="cancelled">
+      {% if cancelled %}
+        {% for b in cancelled %}
+        <div class="card border-0 shadow-sm mb-3">
+          <div class="card-body p-4">
+            <h6 class="fw-bold mb-1">{{ b.experience.title }}</h6>
+            <p class="text-muted small mb-0"><i class="bi bi-person me-1"></i>{{ b.tourist.get_full_name }} &nbsp;|&nbsp; <i class="bi bi-calendar me-1"></i>{{ b.requested_date }}</p>
+          </div>
+        </div>
+        {% endfor %}
+      {% else %}
+        <p class="text-muted text-center py-4">No cancelled bookings.</p>
+      {% endif %}
+    </div>
+  </div>
+</div>
+{% endblock %}

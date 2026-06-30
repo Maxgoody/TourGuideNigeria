@@ -1,0 +1,92 @@
+{% extends 'base.html' %}
+{% block title %}TourGuide Nigeria — Discover Local Experiences{% endblock %}
+{% block content %}
+
+<!-- HERO -->
+<section class="hero-section text-white py-5">
+  <div class="container py-4">
+    <div class="row align-items-center">
+      <div class="col-lg-7">
+        <h1 class="display-4 fw-bold mb-3">Discover Nigeria Through Local Eyes</h1>
+        <p class="lead mb-4">Connect with verified local tour guides, book authentic experiences, and explore Nigeria's rich culture, history, and landscapes with confidence.</p>
+        <form action="{% url 'guides:guide_list' %}" method="get" class="d-flex gap-2 flex-wrap">
+          <input type="text" name="q" class="form-control form-control-lg flex-grow-1" placeholder="Search by city, region, or guide name...">
+          <button type="submit" class="btn btn-warning btn-lg px-4 fw-semibold">
+            <i class="bi bi-search me-1"></i> Search
+          </button>
+        </form>
+      </div>
+      <div class="col-lg-5 text-center d-none d-lg-block">
+        <i class="bi bi-map-fill hero-icon"></i>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- STATS -->
+<section class="bg-white py-4 border-bottom shadow-sm">
+  <div class="container">
+    <div class="row text-center g-3">
+      <div class="col-4">
+        <h3 class="fw-bold text-primary mb-0"><i class="bi bi-person-check"></i> Verified</h3>
+        <p class="text-muted small mb-0">All guides are verified</p>
+      </div>
+      <div class="col-4">
+        <h3 class="fw-bold text-primary mb-0"><i class="bi bi-star-fill"></i> Rated</h3>
+        <p class="text-muted small mb-0">Honest tourist reviews</p>
+      </div>
+      <div class="col-4">
+        <h3 class="fw-bold text-primary mb-0"><i class="bi bi-shield-check"></i> Secure</h3>
+        <p class="text-muted small mb-0">Safe and transparent</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- HOW IT WORKS -->
+<section class="py-5 bg-light">
+  <div class="container">
+    <h2 class="text-center fw-bold mb-5">How It Works</h2>
+    <div class="row g-4 text-center">
+      <div class="col-md-4">
+        <div class="card border-0 shadow-sm h-100 p-4">
+          <div class="step-icon mb-3"><i class="bi bi-search fs-1 text-primary"></i></div>
+          <h5 class="fw-bold">1. Find a Guide</h5>
+          <p class="text-muted">Search verified local guides by location, specialization, language, and rating.</p>
+        </div>
+      </div>
+      <div class="col-md-4">
+        <div class="card border-0 shadow-sm h-100 p-4">
+          <div class="step-icon mb-3"><i class="bi bi-calendar-plus fs-1 text-success"></i></div>
+          <h5 class="fw-bold">2. Book an Experience</h5>
+          <p class="text-muted">Select an experience, choose your date, and submit your booking request in minutes.</p>
+        </div>
+      </div>
+      <div class="col-md-4">
+        <div class="card border-0 shadow-sm h-100 p-4">
+          <div class="step-icon mb-3"><i class="bi bi-star fs-1 text-warning"></i></div>
+          <h5 class="fw-bold">3. Rate Your Guide</h5>
+          <p class="text-muted">After your tour, share your experience to help other travellers make great choices.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CALL TO ACTION -->
+<section class="py-5">
+  <div class="container text-center">
+    <h2 class="fw-bold mb-3">Ready to Explore?</h2>
+    <p class="text-muted mb-4">Join thousands of tourists discovering authentic local experiences across Nigeria.</p>
+    <div class="d-flex gap-3 justify-content-center flex-wrap">
+      <a href="{% url 'accounts:register_tourist' %}" class="btn btn-primary btn-lg px-5">
+        <i class="bi bi-person-plus me-1"></i> Register as Tourist
+      </a>
+      <a href="{% url 'accounts:register_guide' %}" class="btn btn-outline-primary btn-lg px-5">
+        <i class="bi bi-briefcase me-1"></i> Become a Guide
+      </a>
+    </div>
+  </div>
+</section>
+
+{% endblock %}

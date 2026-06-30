@@ -1,0 +1,55 @@
+{% extends 'base.html' %}
+{% block title %}My Bookings — TourGuide Nigeria{% endblock %}
+{% block content %}
+<div class="container py-5">
+  <div class="d-flex justify-content-between align-items-center mb-4">
+    <h2 class="fw-bold mb-0"><i class="bi bi-calendar-check text-primary me-2"></i>My Bookings</h2>
+    <a href="{% url 'guides:guide_list' %}" class="btn btn-primary"><i class="bi bi-search me-1"></i>Find More Guides</a>
+  </div>
+  {% if bookings %}
+  <div class="table-responsive">
+    <table class="table table-hover align-middle">
+      <thead class="table-light">
+        <tr>
+          <th>Experience</th>
+          <th>Guide</th>
+          <th>Date</th>
+          <th>Status</th>
+          <th>Action</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for b in bookings %}
+        <tr>
+          <td><strong>{{ b.experience.title }}</strong></td>
+          <td>{{ b.guide.get_full_name }}</td>
+          <td>{{ b.requested_date }}</td>
+          <td><span class="badge bg-{{ b.status_badge_class }}">{{ b.get_status_display }}</span></td>
+          <td>
+            {% if b.can_be_reviewed %}
+            <a href="{% url 'reviews:review_create' b.pk %}" class="btn btn-warning btn-sm"><i class="bi bi-star me-1"></i>Leave Review</a>
+            {% elif b.has_review %}
+            <span class="text-success small"><i class="bi bi-check-circle me-1"></i>Reviewed</span>
+            {% elif b.status == 'pending' or b.status == 'confirmed' %}
+            <form method="post" action="{% url 'bookings:booking_cancel' b.pk %}" onsubmit="return confirm('Are you sure you want to cancel this booking?')">
+              {% csrf_token %}
+              <button type="submit" class="btn btn-outline-danger btn-sm">Cancel</button>
+            </form>
+            {% else %}
+            <span class="text-muted small">—</span>
+            {% endif %}
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+  {% else %}
+  <div class="text-center py-5 text-muted">
+    <i class="bi bi-calendar-x fs-1"></i>
+    <h5 class="mt-3">No bookings yet.</h5>
+    <a href="{% url 'guides:guide_list' %}" class="btn btn-primary mt-2">Find a Guide</a>
+  </div>
+  {% endif %}
+</div>
+{% endblock %}

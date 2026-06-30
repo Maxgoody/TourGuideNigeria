@@ -1,0 +1,22 @@
+{% extends 'base.html' %}
+{% block title %}Delete Experience — TourGuide Nigeria{% endblock %}
+{% block content %}
+<div class="container py-5">
+  <div class="row justify-content-center">
+    <div class="col-md-6">
+      <div class="card border-0 shadow-sm border-danger">
+        <div class="card-body p-4 text-center">
+          <i class="bi bi-exclamation-triangle-fill text-danger fs-1 mb-3"></i>
+          <h4 class="fw-bold">Delete Experience?</h4>
+          <p class="text-muted">Are you sure you want to delete <strong>"{{ experience.title }}"</strong>? This action cannot be undone.</p>
+          <form method="post" class="d-flex gap-2 justify-content-center mt-4">
+            {% csrf_token %}
+            <button type="submit" class="btn btn-danger px-4">Yes, Delete</button>
+            <a href="{% url 'accounts:dashboard' %}" class="btn btn-outline-secondary px-4">Cancel</a>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

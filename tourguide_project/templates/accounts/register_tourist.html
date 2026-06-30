@@ -1,0 +1,27 @@
+{% extends 'base.html' %}
+{% load crispy_forms_tags %}
+{% block title %}Register as Tourist — TourGuide Nigeria{% endblock %}
+{% block content %}
+<div class="container py-5">
+  <div class="row justify-content-center">
+    <div class="col-md-6">
+      <div class="card shadow border-0">
+        <div class="card-body p-4">
+          <h3 class="fw-bold text-center mb-1"><i class="bi bi-person-plus text-primary"></i> Register as Tourist</h3>
+          <p class="text-center text-muted mb-4">Create your account to start booking local experiences</p>
+          <form method="post">
+            {% csrf_token %}
+            {{ form|crispy }}
+            <div class="d-grid mt-3">
+              <button type="submit" class="btn btn-primary btn-lg">Create Account</button>
+            </div>
+          </form>
+          <hr>
+          <p class="text-center mb-1">Already have an account? <a href="{% url 'accounts:login' %}">Login</a></p>
+          <p class="text-center mb-0">Are you a guide? <a href="{% url 'accounts:register_guide' %}">Register as Guide</a></p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

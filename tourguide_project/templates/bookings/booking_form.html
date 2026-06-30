@@ -1,0 +1,55 @@
+{% extends 'base.html' %}
+{% load crispy_forms_tags %}
+{% block title %}Book {{ experience.title }} — TourGuide Nigeria{% endblock %}
+{% block content %}
+<div class="container py-5">
+  <div class="row justify-content-center">
+    <div class="col-md-7">
+      <!-- Experience summary -->
+      <div class="card border-0 shadow-sm mb-4 bg-light">
+        <div class="card-body p-4">
+          <h5 class="fw-bold mb-1">{{ experience.title }}</h5>
+          <p class="text-muted small mb-1">
+            <i class="bi bi-person me-1"></i>Guide: <strong>{{ experience.guide.user.get_full_name }}</strong>
+            <span class="ms-3"><i class="bi bi-geo-alt me-1"></i>{{ experience.location }}</span>
+          </p>
+          <p class="text-muted small mb-1">
+            <i class="bi bi-clock me-1"></i>{{ experience.duration_hours }} hours
+            <span class="ms-3 fw-bold text-success">₦{{ experience.price|floatformat:2 }} per person</span>
+          </p>
+          <p class="mb-0 text-muted small">{{ experience.description|truncatechars:150 }}</p>
+        </div>
+      </div>
+      <!-- Booking form -->
+      <div class="card border-0 shadow-sm">
+        <div class="card-body p-4">
+          <h4 class="fw-bold mb-4"><i class="bi bi-calendar-plus text-primary me-2"></i>Request a Booking</h4>
+          <form method="post">
+            {% csrf_token %}
+            {{ form|crispy }}
+            <div class="d-flex gap-2 mt-3">
+              <button type="submit" class="btn btn-primary px-4">Submit Booking Request</button>
+              <a href="{% url 'guides:guide_detail' experience.guide.pk %}" class="btn btn-outline-secondary">Back</a>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}
+{% block extra_js %}
+<script>
+  // Prevent past date selection
+  const dateInput = document.querySelector('input[type="date"]');
+  if (dateInput) {
+    dateInput.addEventListener('change', function() {
+      const today = new Date().toISOString().split('T')[0];
+      if (this.value < today) {
+        this.value = '';
+        alert('Please select a future date.');
+      }
+    });
+  }
+</script>
+{% endblock %}

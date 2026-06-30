@@ -1,0 +1,119 @@
+/* ── TourGuide Nigeria — Main Stylesheet ── */
+
+:root {
+  --primary: #0d6efd;
+  --success: #198754;
+  --warning: #ffc107;
+}
+
+body {
+  font-family: 'Segoe UI', Roboto, sans-serif;
+  background-color: #f8f9fa;
+  color: #212529;
+}
+
+/* Hero Section */
+.hero-section {
+  background: linear-gradient(135deg, #0d6efd 0%, #0a58ca 60%, #084298 100%);
+  min-height: 380px;
+  display: flex;
+  align-items: center;
+}
+
+.hero-icon {
+  font-size: 10rem;
+  opacity: 0.15;
+}
+
+/* Guide Cards */
+.guide-card {
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.guide-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 8px 24px rgba(0,0,0,0.12) !important;
+}
+
+/* Star Rating Widget */
+.star-btn {
+  transition: transform 0.1s;
+}
+
+.star-btn:hover {
+  transform: scale(1.2);
+}
+
+/* Navbar active state */
+.navbar-nav .nav-link:hover {
+  background-color: rgba(255,255,255,0.1);
+  border-radius: 4px;
+}
+
+/* Cards */
+.card {
+  border-radius: 12px;
+}
+
+/* Badge pills */
+.badge {
+  font-weight: 500;
+  letter-spacing: 0.3px;
+}
+
+/* Buttons */
+.btn {
+  border-radius: 8px;
+  font-weight: 500;
+}
+
+/* Tables */
+.table th {
+  font-weight: 600;
+  color: #495057;
+}
+
+/* Forms */
+.form-control:focus,
+.form-select:focus {
+  border-color: var(--primary);
+  box-shadow: 0 0 0 0.2rem rgba(13,110,253,0.15);
+}
+
+/* Alert */
+.alert {
+  border-radius: 10px;
+  border: none;
+}
+
+/* Step icons on home page */
+.step-icon {
+  transition: transform 0.2s;
+}
+
+.card:hover .step-icon {
+  transform: scale(1.1);
+}
+
+/* Tabs */
+.nav-tabs .nav-link.active {
+  font-weight: 600;
+  color: var(--primary);
+}
+
+/* Footer */
+footer {
+  border-top: 3px solid #0d6efd;
+}
+
+/* Verified badge */
+.verified-badge {
+  color: #0d6efd;
+}
+
+/* Responsive avatar */
+.avatar-placeholder {
+  width: 60px;
+  height: 60px;
+  flex-shrink: 0;
+}

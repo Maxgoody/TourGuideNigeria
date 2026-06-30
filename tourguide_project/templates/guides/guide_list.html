@@ -1,0 +1,114 @@
+{% extends 'base.html' %}
+{% load crispy_forms_tags %}
+{% block title %}Find Tour Guides — TourGuide Nigeria{% endblock %}
+{% block content %}
+<div class="container py-5">
+  <h2 class="fw-bold mb-1">Find a Tour Guide</h2>
+  <p class="text-muted mb-4">Discover verified local guides across Nigeria</p>
+
+  <!-- Filters -->
+  <div class="card border-0 shadow-sm mb-4">
+    <div class="card-header bg-white fw-semibold border-0 pt-3"><i class="bi bi-funnel me-2 text-primary"></i>Filter Guides</div>
+    <div class="card-body">
+      <form method="get" id="filter-form">
+        <div class="row g-3">
+          <div class="col-md-4">
+            <input type="text" name="q" class="form-control" placeholder="Search location or name..." value="{{ request.GET.q }}">
+          </div>
+          <div class="col-md-3">
+            <select name="category" class="form-select auto-submit">
+              <option value="">All Categories</option>
+              {% for val, label in form.category.field.choices %}
+              {% if val %}<option value="{{ val }}" {% if request.GET.category == val %}selected{% endif %}>{{ label }}</option>{% endif %}
+              {% endfor %}
+            </select>
+          </div>
+          <div class="col-md-3">
+            <select name="language" class="form-select auto-submit">
+              <option value="">Any Language</option>
+              {% for val, label in form.language.field.choices %}
+              {% if val %}<option value="{{ val }}" {% if request.GET.language == val %}selected{% endif %}>{{ label }}</option>{% endif %}
+              {% endfor %}
+            </select>
+          </div>
+          <div class="col-md-2">
+            <select name="min_rating" class="form-select auto-submit">
+              <option value="">Any Rating</option>
+              {% for val, label in form.min_rating.field.choices %}
+              {% if val %}<option value="{{ val }}" {% if request.GET.min_rating == val %}selected{% endif %}>{{ label }}</option>{% endif %}
+              {% endfor %}
+            </select>
+          </div>
+        </div>
+        <div class="mt-3 d-flex gap-2">
+          <button type="submit" class="btn btn-primary"><i class="bi bi-search me-1"></i>Search</button>
+          <a href="{% url 'guides:guide_list' %}" class="btn btn-outline-secondary">Clear</a>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Results -->
+  {% if page_obj %}
+  <p class="text-muted mb-3">{{ page_obj.paginator.count }} guide{{ page_obj.paginator.count|pluralize }} found</p>
+  <div class="row g-4">
+    {% for profile in page_obj %}
+    <div class="col-md-4">
+      <div class="card border-0 shadow-sm h-100 guide-card">
+        <div class="card-body p-4">
+          <div class="d-flex align-items-center mb-3">
+            {% if profile.profile_photo %}
+            <img src="{{ profile.profile_photo.url }}" alt="{{ profile.user.get_full_name }}" class="rounded-circle me-3" width="60" height="60" style="object-fit:cover">
+            {% else %}
+            <div class="rounded-circle bg-primary text-white d-flex align-items-center justify-content-center me-3 fw-bold fs-4" style="width:60px;height:60px;flex-shrink:0">
+              {{ profile.user.first_name|first }}{{ profile.user.last_name|first }}
+            </div>
+            {% endif %}
+            <div>
+              <h6 class="fw-bold mb-0">
+                {{ profile.user.get_full_name }}
+                {% if profile.is_verified %}<i class="bi bi-patch-check-fill text-primary ms-1" title="Verified"></i>{% endif %}
+              </h6>
+              <small class="text-muted"><i class="bi bi-geo-alt me-1"></i>{{ profile.location|default:"Location not set" }}</small>
+            </div>
+          </div>
+          <p class="text-muted small mb-2">{{ profile.bio|truncatechars:100 }}</p>
+          <div class="d-flex justify-content-between align-items-center mb-3">
+            <span class="badge bg-light text-dark border">{{ profile.get_specialization_display }}</span>
+            <span class="text-warning fw-semibold">
+              <i class="bi bi-star-fill"></i> {{ profile.average_rating }}
+            </span>
+          </div>
+          <a href="{% url 'guides:guide_detail' profile.pk %}" class="btn btn-outline-primary btn-sm w-100">View Profile</a>
+        </div>
+      </div>
+    </div>
+    {% endfor %}
+  </div>
+  <!-- Pagination -->
+  {% if page_obj.has_other_pages %}
+  <nav class="mt-4">
+    <ul class="pagination justify-content-center">
+      {% if page_obj.has_previous %}
+      <li class="page-item"><a class="page-link" href="?{{ query_string }}&page={{ page_obj.previous_page_number }}">Previous</a></li>
+      {% endif %}
+      {% for num in page_obj.paginator.page_range %}
+      <li class="page-item {% if page_obj.number == num %}active{% endif %}">
+        <a class="page-link" href="?{{ query_string }}&page={{ num }}">{{ num }}</a>
+      </li>
+      {% endfor %}
+      {% if page_obj.has_next %}
+      <li class="page-item"><a class="page-link" href="?{{ query_string }}&page={{ page_obj.next_page_number }}">Next</a></li>
+      {% endif %}
+    </ul>
+  </nav>
+  {% endif %}
+  {% else %}
+  <div class="text-center py-5">
+    <i class="bi bi-search fs-1 text-muted"></i>
+    <h5 class="mt-3 text-muted">No guides found matching your criteria.</h5>
+    <a href="{% url 'guides:guide_list' %}" class="btn btn-outline-primary mt-2">Clear Filters</a>
+  </div>
+  {% endif %}
+</div>
+{% endblock %}
