@@ -7,3 +7,5 @@ tzdata==2025.3
 whitenoise==6.12.0
 django-crispy-forms
 crispy-bootstrap5
+cloudinary
+django-cloudinary-storage
