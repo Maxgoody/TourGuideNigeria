@@ -9,3 +9,4 @@ django-crispy-forms
 crispy-bootstrap5
 cloudinary
 django-cloudinary-storage
+psycopg2-binary
