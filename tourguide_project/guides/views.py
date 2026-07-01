@@ -11,6 +11,11 @@ from .forms import GuideProfileForm, ExperienceForm, GuideSearchForm
 def guide_list(request):
     form = GuideSearchForm(request.GET or None)
     profiles = GuideProfile.objects.filter(is_verified=True).select_related('user')
+    
+    # print(f"DEBUG: Total verified profiles found : {profiles.count()}")
+    # if q:
+    #     profiles = profiles.filter(...)
+    #     print(f"DEBUG: Profiles after search query: {profiles.count()}")
 
     q = request.GET.get('q', '').strip()
     category = request.GET.get('category', '')
@@ -25,7 +30,7 @@ def guide_list(request):
             Q(bio__icontains=q)
         )
     if category:
-        profiles = profiles.filter(specialization=category)
+        profiles = profiles.filter(specialization__icontains=category)
     if language:
         profiles = profiles.filter(languages__icontains=language)
     if min_rating:
